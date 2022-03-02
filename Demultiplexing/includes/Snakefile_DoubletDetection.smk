@@ -13,7 +13,8 @@ rule make_DoubletDetection_selection_df:
         output_dict["output_dir"] + "/manual_selections/DoubletDetection/DoubletDetection_manual_selection.tsv"
     resources:
         mem_per_thread_gb = 1,
-        disk_per_thread_gb = 1
+        disk_per_thread_gb = 1,
+        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],
@@ -62,7 +63,8 @@ if os.path.exists(output_dict["output_dir"] + "/manual_selections/DoubletDetecti
             log =  log
         resources:
             mem_per_thread_gb = lambda wildcards, attempt: attempt * DoubletDetection_dict["DoubletDetection_memory"],
-            disk_per_thread_gb = lambda wildcards, attempt: attempt * DoubletDetection_dict["DoubletDetection_memory"]
+            disk_per_thread_gb = lambda wildcards, attempt: attempt * DoubletDetection_dict["DoubletDetection_memory"],
+            queue=DoubletDetection_dict["DoubletDetection_queue"]
         threads: DoubletDetection_dict["DoubletDetection_threads"]
         params:
             script = "/opt/WG1-pipeline-QC/Demultiplexing/scripts/DoubletDetection.py",
@@ -110,7 +112,8 @@ if os.path.exists(output_dict["output_dir"] + "/manual_selections/DoubletDetecti
             output_dict["output_dir"] + "/{pool}/CombinedResults/DoubletDetection_results.txt"
         resources:
             mem_per_thread_gb=lambda wildcards, attempt: attempt * 1,
-            disk_per_thread_gb=lambda wildcards, attempt: attempt * 1
+            disk_per_thread_gb=lambda wildcards, attempt: attempt * 1,
+            queue="normal"
         threads: 1
         params:
             sif = input_dict["singularity_image"],

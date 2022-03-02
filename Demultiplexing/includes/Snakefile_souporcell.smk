@@ -16,7 +16,8 @@ rule souporcell_unzip_barcodes:
     threads: 1
     resources:
         mem_per_thread_gb = lambda wildcards, attempt: attempt * 5,
-        disk_per_thread_gb = lambda wildcards, attempt: attempt * 5
+        disk_per_thread_gb = lambda wildcards, attempt: attempt * 5,
+        queue="normal"
     output:
         output_dict["output_dir"] + "/{pool}/souporcell/barcodes.tsv"
     params:
@@ -42,7 +43,8 @@ rule souporcell:
     threads: souporcell_dict["souporcell_threads"]
     resources:
         mem_per_thread_gb = lambda wildcards, attempt: attempt * souporcell_dict["souporcell_memory"],
-        disk_per_thread_gb = lambda wildcards, attempt: attempt * souporcell_dict["souporcell_memory"]
+        disk_per_thread_gb = lambda wildcards, attempt: attempt * souporcell_dict["souporcell_memory"],
+        queue=souporcell_dict["souporcell_queue"]
     output:
         clusters = output_dict["output_dir"] + "/{pool}/souporcell/clusters.tsv",
         genotypes = output_dict["output_dir"] + "/{pool}/souporcell/cluster_genotypes.vcf"
@@ -83,7 +85,8 @@ rule souporcell_results_temp:
         output_dict["output_dir"] + "/{pool}/CombinedResults/souporcell_results.txt"
     resources:
         mem_per_thread_gb=1,
-        disk_per_thread_gb=1
+        disk_per_thread_gb=1,
+        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],
@@ -114,7 +117,8 @@ rule souporcell_pool_vcf:
         filtered_refs_temp = output_dict["output_dir"] + "/{pool}/souporcell/Individual_genotypes_subset.vcf"
     resources:
         mem_per_thread_gb=5,
-        disk_per_thread_gb=5
+        disk_per_thread_gb=5,
+        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],
@@ -141,7 +145,8 @@ rule souporcell_correlate_genotypes:
         variables = temp(output_dict["output_dir"] + "/{pool}/souporcell/souporcel_genotypes_variables")
     resources:
         mem_per_thread_gb = souporcell_dict["souporcell_correlations_memory"],
-        disk_per_thread_gb = souporcell_dict["souporcell_correlations_memory"]
+        disk_per_thread_gb = souporcell_dict["souporcell_correlations_memory"],
+        queue=souporcell_dict["souporcell_correlations_queue"]
     threads: souporcell_dict["souporcell_correlations_threads"]
     params:
         sif = input_dict["singularity_image"],

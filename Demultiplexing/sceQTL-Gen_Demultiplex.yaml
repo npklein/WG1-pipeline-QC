@@ -16,13 +16,14 @@ inputs:
 outputs: 
   output_dir: /path/to/parent/out/dir ### The path to the parent dir where you would like all outputs/results saved. This path must exist before running.
 
-  
 ##############################################################################################################
 ##### The following arguments are common parameters that may need to be changed depending on the dataset #####
 ##############################################################################################################
 popscle:
   pileup_memory: 10 ### This is the number of gigs that will be used for memory and disk space per thread for the pileup step.
   pileup_threads: 10 ### The number threads that will be used for the pileup step
+  pileup_queue: basement ### queue to run in
+  demuxlet_queue: normal ### queue to run in
   demuxlet_memory: 25 ### This is the number of gigs that will be used for memory and disk space per thread for the demuxlet step
   demuxlet_threads: 4 ### The number threads that will be used for the demuxlet step
   genotype_field: "GP" ### This is the field that will be used to determing the genotype, could be GP or GT or another option
@@ -30,6 +31,8 @@ popscle:
   tag_UMI: "UB" ### The tag for the UMIs. For 10x, UB should be correct
 
 souporcell:
+  souporcell_queue: long ### Queue to use
+  souporcell_correlations_queue: normal ### Queue ot use
   souporcell_threads: 8 ### The number threads that will be used for the souporcell step
   souporcell_memory: 10  ### This is the number of gigs that will be used for memory and disk space per thread for the souporcell step
   souporcell_correlations_threads: 2 ### The number of threads to be used to run R script that will correlate the souporcell cluster genotypes wiht the reference genotypes
@@ -38,21 +41,26 @@ souporcell:
 scrublet:
   scrublet_threads: 1 ### The number threads that will be used for the scrublet step
   scrublet_memory: 5 ### The number amount of memory that will be used for scrublet doublet detection (in GB)
+  scrublet_queue: normal ### queue to run in
   percentile: [80,85,90,95] ### The percentile cutoff for the most variable genes. Scrublet will be run with each of these percentile limits for each pool and saved into a different directory as pool/scrublet_{percentile}/
 
 scds:
   scds_threads: 1 ### The number threads that will be used for the scds step
   scds_memory: 10 ### The amount of memeory (GB) per thread for the scds step
+  scds_queue: normal ### queue to run in
 
 DoubletDetection:
   DoubletDetection_threads: 2 ### The number threads that will be used for the DoubletDetection step
   DoubletDetection_memory: 10 ### The amount of memory (GB) used per thread for the DoubletDetection step
+  DoubletDetection_queue: normal ### queue to run in
 
 CombineResults:
   FinalAssignments_threads: 2 ### Threads used for the R script that will read in all the software results from all pools and make a final call on the assignment for each barcode
   FinalAssignments_memory: 20 ### Amount of memory used in GB used for the R script that will read in all the software results from all pools and make a final call on the assignment for each barcode
+  FinalAssignments_queue: normal ### queue to run in
   FinalQC_threads: 2 ### Threads used for the R script that will make seurat objects and make QC figures for selecting ideal QC thresholds
   FinalQC_memory: 20 ### Memory (in GB) used for the R script that will make seurat objects and make QC figures for selecting ideal QC thresholds
+  FinalQC_queue: normal ### queue to run in
 
 
 

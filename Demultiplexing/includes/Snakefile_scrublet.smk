@@ -13,7 +13,8 @@ rule make_scrublet_selection_df:
         output_dict["output_dir"] + "/manual_selections/scrublet/scrublet_percentile_manual_selection.tsv"
     resources:
         mem_per_thread_gb = 1,
-        disk_per_thread_gb = 1
+        disk_per_thread_gb = 1,
+        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],
@@ -64,6 +65,7 @@ if os.path.exists(output_dict["output_dir"] + "/manual_selections/scrublet/scrub
         resources:
             mem_per_thread_gb = lambda wildcards, attempt: attempt * scrublet_dict["scrublet_memory"],
             disk_per_thread_gb = lambda wildcards, attempt: attempt * scrublet_dict["scrublet_memory"],
+            queue=scrublet_dict["scrublet_queue"]
         threads: scrublet_dict["scrublet_threads"]
         params:
             sif = input_dict["singularity_image"],
@@ -129,7 +131,8 @@ if os.path.exists(output_dict["output_dir"] + "/manual_selections/scrublet/scrub
             output_dict["output_dir"] + "/{pool}/CombinedResults/{pctl}_scrublet_results.txt"
         resources:
             mem_per_thread_gb=lambda wildcards, attempt: attempt * 1,
-            disk_per_thread_gb=lambda wildcards, attempt: attempt * 1
+            disk_per_thread_gb=lambda wildcards, attempt: attempt * 1,
+            queue="normal"
         threads: 1
         params:
             sif = input_dict["singularity_image"],

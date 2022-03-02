@@ -20,7 +20,8 @@ rule join_results:
         output_dict["output_dir"] + "/{pool}/CombinedResults/CombinedDropletAssignments.tsv"
     resources:
         mem_per_thread_gb=5,
-        disk_per_thread_gb=5
+        disk_per_thread_gb=5,
+        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],
@@ -48,7 +49,8 @@ rule final_assignments:
         variables = output_dict["output_dir"] + "/{pool}/CombinedResults/variables.txt"
     resources:
         mem_per_thread_gb = lambda wildcards, attempt: attempt * CombineResults_dict["FinalAssignments_memory"],
-        disk_per_thread_gb = lambda wildcards, attempt: attempt * CombineResults_dict["FinalAssignments_memory"]
+        disk_per_thread_gb = lambda wildcards, attempt: attempt * CombineResults_dict["FinalAssignments_memory"],
+        queue=CombineResults_dict["FinalAssignments_queue"]
     threads: CombineResults_dict["FinalAssignments_threads"]
     params:
         sif = input_dict["singularity_image"],
@@ -75,7 +77,8 @@ rule echo_final_assignments:
         output_dict["output_dir"] + "/QC_figures/final_assignments.txt"
     resources:
         mem_per_thread_gb=1,
-        disk_per_thread_gb=1
+        disk_per_thread_gb=1,
+        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],
@@ -95,7 +98,8 @@ rule final_assignments_check:
         meta = output_dict["output_dir"] + "/QC_figures/meta_comparison.txt"
     resources:
         mem_per_thread_gb=1,
-        disk_per_thread_gb=1
+        disk_per_thread_gb=1,
+        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],
@@ -126,7 +130,8 @@ rule QC_plots:
         fig = output_dict["output_dir"] + "/QC_figures/UMI_vs_Genes_QC_scatter.png"
     resources:
         mem_per_thread_gb = lambda wildcards, attempt: attempt * CombineResults_dict["FinalQC_memory"],
-        disk_per_thread_gb = lambda wildcards, attempt: attempt * CombineResults_dict["FinalQC_memory"]
+        disk_per_thread_gb = lambda wildcards, attempt: attempt * CombineResults_dict["FinalQC_memory"],
+        queue=CombineResults_dict["FinalQC_queue"]
     threads: CombineResults_dict["FinalQC_threads"]
     params:
         sif = input_dict["singularity_image"],

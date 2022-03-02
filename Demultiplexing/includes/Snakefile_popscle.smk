@@ -17,12 +17,13 @@ rule popscle_pileup:
         output_dict["output_dir"] + "/{pool}/popscle/pileup/pileup.var.gz"
     resources:
         mem_per_thread_gb=lambda wildcards, attempt: attempt * popscle_dict["pileup_memory"],
-        disk_per_thread_gb=lambda wildcards, attempt: attempt * popscle_dict["pileup_memory"]
+        disk_per_thread_gb=lambda wildcards, attempt: attempt * popscle_dict["pileup_memory"],
+        queue=popscle_dict["pileup_queue"]
     threads: popscle_dict["pileup_threads"]
     params:
         out = output_dict["output_dir"] + "/{pool}/popscle/pileup/pileup",
         sif = input_dict["singularity_image"],
-        bind = bind_path, 
+        bind = bind_path,
         tag_group = popscle_dict["tag_group"],
         tag_UMI = popscle_dict["tag_UMI"],
         cap_BQ = popscle_extra_dict["cap_BQ"],
@@ -63,7 +64,8 @@ rule popscle_demuxlet:
         output_dict["output_dir"] + "/{pool}/popscle/demuxlet/demuxletOUT.best"
     resources:
         mem_per_thread_gb = lambda wildcards, attempt: attempt * popscle_dict["demuxlet_memory"],
-        disk_per_thread_gb = lambda wildcards, attempt: attempt * popscle_dict["demuxlet_threads"]
+        disk_per_thread_gb = lambda wildcards, attempt: attempt * popscle_dict["demuxlet_memory"],
+        queue=popscle_dict["demuxlet_queue"]
     threads: popscle_dict["demuxlet_threads"]
     params:
         pileup = output_dict["output_dir"] + "/{pool}/popscle/pileup/pileup",
@@ -121,7 +123,8 @@ rule demuxlet_results_temp:
         output_dict["output_dir"] + "/{pool}/CombinedResults/demuxlet_results.txt"
     resources:
         mem_per_thread_gb=1,
-        disk_per_thread_gb=1
+        disk_per_thread_gb=1,
+        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],
