@@ -15,8 +15,9 @@ from mods import read10x
 ### Extract variables from configuration file for use within the rest of the pipeline
 config = prepareArguments.parsePaths(config)
 if "run_demuxlet" in config:
-    run_demuxlet = config["run_demuxlext"]
+    run_demuxlet = config["run_demuxlet"]
 else:
+    print('run_demuxlet not in config')
     run_demuxlet = True
 input_dict = config["inputs"]
 output_dict = config["outputs"]
