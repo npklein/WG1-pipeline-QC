@@ -14,11 +14,6 @@ from mods import read10x
 
 ### Extract variables from configuration file for use within the rest of the pipeline
 config = prepareArguments.parsePaths(config)
-if "run_demuxlet" in config:
-    run_demuxlet = config["run_demuxlet"]
-else:
-    print('run_demuxlet not in config')
-    run_demuxlet = True
 input_dict = config["inputs"]
 output_dict = config["outputs"]
 ref_dict = config["refs"]
@@ -27,6 +22,11 @@ bind_path = input_dict["bind_path"]
 
 # Rule-specific arguments
 popscle_dict = config["popscle"]
+if "run_demuxlet" in popscle_dict:
+    run_demuxlet = popscle_dict["run_demuxlet"]
+else:
+    print('run_demuxlet not in popscle_dict')
+    run_demuxlet = True
 popscle_extra_dict = config["popscle_extra"]
 souporcell_dict = config["souporcell"]
 souporcell_extra_dict = config["souporcell_extra"]
