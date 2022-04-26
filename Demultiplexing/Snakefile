@@ -14,6 +14,10 @@ from mods import read10x
 
 ### Extract variables from configuration file for use within the rest of the pipeline
 config = prepareArguments.parsePaths(config)
+if "run_demuxlet" in config:
+    run_demuxlet = config["run_demuxlext"]
+else:
+    run_demuxlet = True
 input_dict = config["inputs"]
 output_dict = config["outputs"]
 ref_dict = config["refs"]
@@ -55,7 +59,8 @@ if not fasta is None:
 
 
     # Import individual rules
-    include: "includes/Snakefile_popscle.smk"
+    if run_demuxlet:
+        include: "includes/Snakefile_popscle.smk"
     include: "includes/Snakefile_scrublet.smk"
     include: "includes/Snakefile_souporcell.smk"
     include: "includes/Snakefile_scds.smk"
@@ -66,7 +71,8 @@ if not fasta is None:
     # Generate list of files to expect
     ## Demuxlet
     demuxlet_files = []
-    demuxlet_files.append(expand(output_dict["output_dir"] + "/{pool}/CombinedResults/demuxlet_results.txt",  pool=samples.Pool))
+    if run_demuxlet:
+        demuxlet_files.append(expand(output_dict["output_dir"] + "/{pool}/CombinedResults/demuxlet_results.txt",  pool=samples.Pool))
 
     ## Souporcell
     souporcell_files = []
