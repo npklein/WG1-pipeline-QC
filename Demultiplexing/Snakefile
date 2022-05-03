@@ -22,11 +22,6 @@ bind_path = input_dict["bind_path"]
 
 # Rule-specific arguments
 popscle_dict = config["popscle"]
-if "run_demuxlet" in popscle_dict:
-    run_demuxlet = popscle_dict["run_demuxlet"]
-else:
-    print('run_demuxlet not in popscle_dict')
-    run_demuxlet = True
 popscle_extra_dict = config["popscle_extra"]
 souporcell_dict = config["souporcell"]
 souporcell_extra_dict = config["souporcell_extra"]
@@ -60,8 +55,6 @@ if not fasta is None:
 
 
     # Import individual rules
-    if run_demuxlet:
-        include: "includes/Snakefile_popscle.smk"
     include: "includes/Snakefile_scrublet.smk"
     include: "includes/Snakefile_souporcell.smk"
     include: "includes/Snakefile_scds.smk"
@@ -70,10 +63,6 @@ if not fasta is None:
 
 
     # Generate list of files to expect
-    ## Demuxlet
-    demuxlet_files = []
-    if run_demuxlet:
-        demuxlet_files.append(expand(output_dict["output_dir"] + "/{pool}/CombinedResults/demuxlet_results.txt",  pool=samples.Pool))
 
     ## Souporcell
     souporcell_files = []
@@ -172,7 +161,6 @@ if not fasta is None:
     # Main rule - input will be all files generated at the top
     rule all:
         input:
-            demuxlet_files,
             souporcell_files,
             scds_files,
             scrublet_files,
