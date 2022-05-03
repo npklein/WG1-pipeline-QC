@@ -11,7 +11,6 @@ if os.path.exists(output_dict["output_dir"] + "/manual_selections/scrublet/scrub
 
 rule join_results:
     input:
-        demuxlet = output_dict["output_dir"] + "/{pool}/CombinedResults/demuxlet_results.txt",
         souporcell = output_dict["output_dir"] + "/{pool}/CombinedResults/souporcell_results.txt",
         scrublet = lambda wildcards: expand(output_dict["output_dir"] + "/{pool}/CombinedResults/{pctl}_scrublet_results.txt", zip, pool = wildcards.pool, pctl = scrublet_selection.scrublet_Percentile[scrublet_selection.Pool == wildcards.pool]),
         scds = output_dict["output_dir"] + "/{pool}/CombinedResults/scds_results.txt",
@@ -29,8 +28,7 @@ rule join_results:
     log: output_dict["output_dir"] + "/logs/join_results.{pool}.log"
     shell:
         """
-        join -a1 -a2 -1 1 -2 1 -t "\t" -e"NA" -o "0,1.2,1.3,1.4,1.5,1.6,1.7,2.2,2.3,2.4,2.5" {input.demuxlet} {input.souporcell} | awk 'NR<2{{print $0;next}}{{print $0| "sort -k1"}}' | \
-            join -a1 -a2 -1 1 -2 1 -t "\t" -e"NA" -o "0,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,1.10,1.11,2.2,2.3" - {input.scrublet} | awk 'NR<2{{print $0;next}}{{print $0| "sort -k1"}}' | \
+        join -a1 -a2 -1 1 -2 1 -t "\t" -e"NA" -o "0,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,1.10,1.11,2.2,2.3" - {input.scrublet} | awk 'NR<2{{print $0;next}}{{print $0| "sort -k1"}}' | \
             join -a1 -a2 -1 1 -2 1 -t "\t" -e"NA" -o "0,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,2.2,2.3" - {input.scds} | awk 'NR<2{{print $0;next}}{{print $0| "sort -k1"}}' | \
             join -a1 -a2 -1 1 -2 1 -t "\t" -e"NA" -o "0,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,1.10,1.11,1.12,1.13,1.14,1.15,2.2" - {input.DoubletDetection} > {output}
         """
