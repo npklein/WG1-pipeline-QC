@@ -71,7 +71,10 @@ rownames(assignments_final) <- assignments_final$Barcode
 
 ## Read in data
 counts_list <- lapply(dir_locations$Matrix_Directories, function(x){
-    Read10X(x, gene.column = 2)
+    tenx <- Read10X(x, gene.column = 2)
+    if(length(tenx)==2){
+        tenx <- tenx$`Gene Expression`
+    }
 })
 names(counts_list) <- pools_list
 

@@ -26,8 +26,10 @@ results[is.na(results$demuxlet_DiffLLK), "demuxlet_DiffLLK"] <- 0
 
 message("Creating List of Softwares")
 ##### make a list of all softwares #####
-softwares <- c("demuxlet","souporcell","DoubletDetection","scds","scrublet")
-demultiplexing_combn <- t(combn(softwares, 5, simplify = TRUE)) %>% apply(. , 1 , paste , collapse = "_" )
+#softwares <- c("demuxlet","souporcell","DoubletDetection","scds","scrublet")
+softwares <- c("souporcell","DoubletDetection","scds","scrublet")
+#demultiplexing_combn <- t(combn(softwares, 5, simplify = TRUE)) %>% apply(. , 1 , paste , collapse = "_" )
+demultiplexing_combn <- t(combn(softwares, 4, simplify = TRUE)) %>% apply(. , 1 , paste , collapse = "_" )
 
 ##### Make a dataframe to provide assignments for intersection of doublets #####
 intersection_doublet_demultiplex <- results[,c("Barcode")]
@@ -36,7 +38,7 @@ intersection_doublet_demultiplex <- results[,c("Barcode")]
 message("Creating Intersection and Union Assignments for each combination")
 ### Get a df of the droplet type ###
 temp_DropletType <- results[,paste0(softwares,"_DropletType")]
-temp_Assignment <- results[,paste0(c("demuxlet","souporcell"),"_Assignment")]
+temp_Assignment <- results[,paste0(c("souporcell"),"_Assignment")]
 
 # Create column called "DropletType_temp"
 # In this column, if number of singlet assignments per cell are all singlets, then label as singlet
