@@ -15,7 +15,6 @@ rule scds:
     resources:
         mem_per_thread_gb=lambda wildcards, attempt: attempt * scds_dict["scds_memory"],
         disk_per_thread_gb=lambda wildcards, attempt: attempt * scds_dict["scds_memory"],
-        queue=scds_dict["scds_queue"]
     threads: scds_dict["scds_threads"]
     params:
         script = "/opt/WG1-pipeline-QC/Demultiplexing/scripts/scds.R",
@@ -41,7 +40,6 @@ rule scds_results_temp:
     resources:
         mem_per_thread_gb=1,
         disk_per_thread_gb=1,
-        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],

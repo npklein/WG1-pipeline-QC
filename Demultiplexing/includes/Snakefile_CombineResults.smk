@@ -20,7 +20,6 @@ rule join_results:
     resources:
         mem_per_thread_gb=5,
         disk_per_thread_gb=5,
-        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],
@@ -48,13 +47,13 @@ rule final_assignments:
     resources:
         mem_per_thread_gb = lambda wildcards, attempt: attempt * CombineResults_dict["FinalAssignments_memory"],
         disk_per_thread_gb = lambda wildcards, attempt: attempt * CombineResults_dict["FinalAssignments_memory"],
-        queue=CombineResults_dict["FinalAssignments_queue"]
     threads: CombineResults_dict["FinalAssignments_threads"]
     params:
         sif = input_dict["singularity_image"],
         bind = bind_path,
         out = output_dict["output_dir"],
-        script = "/opt/WG1-pipeline-QC/Demultiplexing/scripts/FinalBarcodeAssignments.R"
+        script = "/lustre/scratch119/opentargets/opentargets/OTAR2064/working/sle/2022-03-07-sc-eQTLgen-pipeline/2022-03-17-scEqtlgen-scripts-and-data/sif_files/WG1/demultiplex/scripts/FinalBarcodeAssignments.R"
+#        script = "/opt/WG1-pipeline-QC/Demultiplexing/scripts/FinalBarcodeAssignments.R"
     log: output_dict["output_dir"] + "/logs/final_assignments.{pool}.log"
     shell:
         """
@@ -76,7 +75,6 @@ rule echo_final_assignments:
     resources:
         mem_per_thread_gb=1,
         disk_per_thread_gb=1,
-        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],
@@ -97,7 +95,6 @@ rule final_assignments_check:
     resources:
         mem_per_thread_gb=1,
         disk_per_thread_gb=1,
-        queue="normal"
     threads: 1
     params:
         sif = input_dict["singularity_image"],
@@ -170,12 +167,11 @@ rule QC_plots:
     resources:
         mem_per_thread_gb = lambda wildcards, attempt: attempt * CombineResults_dict["FinalQC_memory"],
         disk_per_thread_gb = lambda wildcards, attempt: attempt * CombineResults_dict["FinalQC_memory"],
-        queue=CombineResults_dict["FinalQC_queue"]
     threads: CombineResults_dict["FinalQC_threads"]
     params:
         sif = input_dict["singularity_image"],
         bind = bind_path,
-        script = "/opt/WG1-pipeline-QC/Demultiplexing/scripts/Singlet_QC_Figures.R",
+        script = "/lustre/scratch119/opentargets/opentargets/OTAR2064/working/sle/2022-03-07-sc-eQTLgen-pipeline/2022-03-17-scEqtlgen-scripts-and-data/sif_files/WG1/demultiplex/scripts/Singlet_QC_Figures.R",
         main_dir = output_dict["output_dir"],
         dirs10x = output_dict["output_dir"] + '/file_directories.txt',
         out = output_dict["output_dir"] + "/QC_figures/",
